@@ -1,0 +1,57 @@
+version: "3"
+
+networks:
+  admin-messaging-tier:
+    driver: bridge
+
+services:
+  rabbitmq:
+    image: 'bitnami/rabbitmq:latest'
+    container_name: rabbitmq
+    hostname: rabbit
+    environment:
+    - RABBITMQ_USERNAME=admin
+    - RABBITMQ_PASSWORD=parola86
+    - RABBITMQ_NODE_PORT_NUMBER=5672
+    - RABBITMQ_VHOST=/
+    networks:
+    - admin-messaging-tier
+    ports:
+    - "5673:5672"
+    - "15673:15672"
+  stats:
+    image: bitnami/rabbitmq
+    environment:
+    - RABBITMQ_NODE_TYPE=stats
+    - RABBITMQ_NODE_NAME=rabbit@stats
+    - RABBITMQ_ERL_COOKIE=s3cr3tc00ki3
+    ports:
+    - '15672:15672'
+    volumes:
+    - 'rabbitmqstats_data:/bitnami'
+  queue-disc1:
+    image: bitnami/rabbitmq
+    environment:
+    - RABBITMQ_NODE_TYPE=queue-disc
+    - RABBITMQ_NODE_NAME=rabbit@queue-disc1
+    - RABBITMQ_CLUSTER_NODE_NAME=rabbit@stats
+    - RABBITMQ_ERL_COOKIE=s3cr3tc00ki3
+    volumes:
+    - 'rabbitmqdisc1_data:/bitnami'
+  queue-ram1:
+    image: bitnami/rabbitmq
+    environment:
+    - RABBITMQ_NODE_TYPE=queue-ram
+    - RABBITMQ_NODE_NAME=rabbit@queue-ram1
+    - RABBITMQ_CLUSTER_NODE_NAME=rabbit@stats
+    - RABBITMQ_ERL_COOKIE=s3cr3tc00ki3
+    volumes:
+    - 'rabbitmqram1_data:/bitnami'
+
+volumes:
+  rabbitmqstats_data:
+    driver: local
+  rabbitmqdisc1_data:
+    driver: local
+  rabbitmqram1_data:
+    driver: local

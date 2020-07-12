@@ -1,0 +1,42 @@
+version: "3.7"
+
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.18.18.0/24
+
+services:
+  db:
+    build:
+      context: ./
+      dockerfile: dockerfile-db
+    image: db
+    environment:
+      POSTGRES_MULTIPLE_DATABASES: oauth2, dashboard
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    #identify secret
+    secrets:
+    - db_password
+    volumes:
+    - ./db-data:/var/lib/postgres/data
+    networks:
+      default:
+        ipv4_address: 172.18.18.13
+    ports:
+    - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+#just a comment
+#directory to scripts
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt

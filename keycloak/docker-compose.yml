@@ -1,0 +1,42 @@
+version: '3'
+services:
+  keycloak:
+    image: jboss/keycloak:9.0.0
+    container_name: keycloak
+    command:
+      [
+        '-b',
+        '0.0.0.0',
+        '-Dkeycloak.migration.action=import',
+        '-Dkeycloak.migration.provider=dir',
+        '-Dkeycloak.migration.dir=/opt/jboss/keycloak/realm-config',
+        '-Dkeycloak.migration.strategy=OVERWRITE_EXISTING',
+        '-Djboss.socket.binding.port-offset=1000',
+        '-Dkeycloak.profile.feature.upload_scripts=enabled',
+      ]
+    volumes:
+    - ./realm-config:/opt/jboss/keycloak/realm-config
+    - ./themes/adminlte:/opt/jboss/keycloak/themes/adminlte
+    environment:
+    - KEYCLOAK_USER=admin
+    - KEYCLOAK_PASSWORD=admin
+    - KEYCLOAK_JDBC_PARAMS=ssl=false
+    - DB_VENDOR=postgres
+    - DB_ADDR=172.18.18.13
+    - DB_PORT=5432
+    - DB_DATABASE=oauth2
+    - DB_SCHEMA=public
+    - DB_USER=postgres
+    - DB_PASSWORD=X22H9Fs4Y8TempPass
+    - JDBC_PARAMS=useSSL=false
+    ports:
+    - 9080:9080
+    - 9443:9443
+    - 10990:10990
+
+#    “system”, who is mainly used by our audit logs, when something is done automatically
+#    “anonymousUser”, who is given to anonymous users when they do an action
+#    “user”, who is a normal user with “ROLE_USER” authorization. The default password is “user”
+#    “admin”, who is an admin user with “ROLE_USER” and “ROLE_ADMIN” authorizations. The default password is “admin”
+
+# docker network connect postgres_default keycloak

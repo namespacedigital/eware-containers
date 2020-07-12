@@ -1,0 +1,13 @@
+version: '3.3'
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:1.5.5
+    hostname: mosquitto
+    container_name: mosquitto
+    expose:
+    - "1883"
+    ports:
+    - "1883:1883"
+
+#    docker run -it --rm --name mqtt-publisher --network 04_custom_default efrecon/mqtt-client pub -h mosquitto  -t "curent" -m "{\"id\":1234,\"message\":\"This is a test\"}"

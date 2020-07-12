@@ -1,0 +1,21 @@
+version: "3"
+
+networks:
+  admin-caching-tier:
+    driver: bridge
+
+services:
+  redis:
+    image: 'bitnami/redis:latest'
+    container_name: redis
+    environment:
+    - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+    - "6380:6379"
+    networks:
+    - admin-caching-tier
+
+  redis-cli:
+    image: 'goodsmileduck/redis-cli'
+    networks:
+    - admin-caching-tier
