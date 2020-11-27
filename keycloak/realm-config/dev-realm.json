@@ -458,18 +458,18 @@
     {
       "id": "3e7ce005-b9b7-4280-8bc5-4d8afc84427a",
       "clientId": "development-service",
-      "rootUrl": "http://192.168.100.29:4100",
-      "adminUrl": "http://192.168.100.29:4100",
+      "rootUrl": "http://localhost:4100",
+      "adminUrl": "http://localhost:4100",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "secret": "**********",
       "redirectUris": [
-        "http://192.168.100.29:4100/*"
+        "http://localhost:4100/*"
       ],
       "webOrigins": [
-        "http://192.168.100.29:4100"
+        "http://localhost:4100"
       ],
       "notBefore": 0,
       "bearerOnly": false,
